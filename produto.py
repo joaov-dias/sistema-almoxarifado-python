@@ -87,3 +87,34 @@ def deletar_produto(id_produto):
     conexao.commit()
 
     conexao.close()
+
+
+def buscar_por_nome(nome):
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    sql = """SELECT * FROM produto WHERE nome LIKE ?"""
+        
+    cursor.execute(sql,(f"%{nome}%",))
+
+    produtos =  cursor.fetchall()
+
+    if produtos:
+
+        print("\nProdutos encontrados:\n")
+        for produto in produtos:
+            print(f"""
+                ID: {produto[0]}
+                Nome: {produto[1]}
+                Quantidade: {produto[2]}
+                Descrição: {produto[3]}
+                Categoria: {produto[4]}
+                Local: {produto[8]}
+                Status: {produto[7]}
+                -------------------------
+                """)
+    else:
+            print("Produto não encontrado!")
+
+    conexao.close()

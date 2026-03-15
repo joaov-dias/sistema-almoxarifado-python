@@ -1,4 +1,4 @@
-from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto
+from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome
 
 
 def mostrar_menu():
@@ -7,6 +7,7 @@ def mostrar_menu():
     print("2 - Atualizar produto")
     print("3 - Cadastrar produto")
     print("4 - Deletar produto")
+    print("5 - Buscar por nome")
     print("0 - Sair")
 
 
@@ -83,6 +84,12 @@ def main():
                     print("Digite um número válido")
 
             deletar_produto(id_produto)
+
+        # BUSCAR POR NOME
+        elif opcao == "5":
+
+            nome= input("Nome do produto:")
+            buscar_por_nome(nome)
 
         # SAIR
         elif opcao == "0":
