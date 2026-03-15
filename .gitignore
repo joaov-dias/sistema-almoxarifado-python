@@ -1,7 +1,4 @@
-__pycache__/ 
-*.db 
-*.pyc 
-__pycache__/ 
-*.pyc 
-*.db 
-.tmp.driveupload/ 
+__pycache__/
+*.pyc
+*.db
+.tmp.driveupload/
