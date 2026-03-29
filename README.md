@@ -16,15 +16,7 @@ SQLite
 SQL
 Git e GitHub
 
-📁 Estrutura do Projeto
-PROJETO_ALMOXARIFADO/
-│
-├── main.py            # Menu principal do sistema
-├── produto.py         # Funções de manipulação dos produtos
-├── conexao.py         # Conexão com banco SQLite
-├── criar_banco.py     # Criação do banco de dados
-├── schema.sql         # Estrutura das tabelas
-└── almoxarifado.db    # Banco de dados SQLite
+
 
 ▶️ Como executar o projeto
 Clone o repositório
@@ -51,6 +43,5 @@ Isso permite controle e reposição eficiente dos itens.
  -Interface gráfica
  
 👨‍💻 Autor
-
 João Vitor Dias Venchiarutti dos Santos
-Projeto para fins de estudo e portfólio.
+
