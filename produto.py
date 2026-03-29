@@ -118,3 +118,31 @@ def buscar_por_nome(nome):
             print("Produto não encontrado!")
 
     conexao.close()
+
+def estoque_minimo():
+    conexao = conectar()
+     
+    cursor = conexao.cursor()
+
+    sql= """
+    SELECT id_produto, nome, qtd, qtd_minima FROM produto
+    WHERE qtd <= qtd_minima
+    """
+    cursor.execute(sql)
+
+    produtos = cursor.fetchall()
+
+    conexao.close()
+
+    if not produtos:
+        print("Nenhum produto com baixo estoque!")
+        return
+    print("Produtos com baixo estoque:\n")
+    print("-" * 15 )
+
+    for produto in produtos:
+        print(f"Id: {produto[0]}")
+        print(f"Nome: {produto[1]}")
+        print(f"Quantidade: {produto[2]}")
+        print(f"Minimo: {produto[3]}")
+        print("-" * 15)

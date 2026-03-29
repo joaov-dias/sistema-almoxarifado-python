@@ -1,4 +1,4 @@
-from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome
+from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo
 
 
 def mostrar_menu():
@@ -8,6 +8,7 @@ def mostrar_menu():
     print("3 - Cadastrar produto")
     print("4 - Deletar produto")
     print("5 - Buscar por nome")
+    print("6 - Estoque mínimo")
     print("0 - Sair")
 
 
@@ -91,11 +92,15 @@ def main():
             nome= input("Nome do produto:")
             buscar_por_nome(nome)
 
+        # ESTOQUE MÍNIMO
+        elif opcao == "6":
+            estoque_minimo()
         # SAIR
         elif opcao == "0":
             print("Saindo...")
             break
 
+        # OPÇÃO INVÁLIDA
         else:
             print("Opção inválida!")
 
