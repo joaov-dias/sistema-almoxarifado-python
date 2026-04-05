@@ -25,7 +25,7 @@ def listar_produtos ():
     cursor = conexao.cursor()
 
     try:
-        cursor.execute("""SELECT id_produto,nome,categoria,local FROM produto""")
+        cursor.execute("""SELECT id_produto,nome,qtd,categoria,local FROM produto""")
 
        
         produtos = cursor.fetchall()
@@ -88,7 +88,6 @@ def deletar_produto(id_produto):
 
     conexao.close()
 
-
 def buscar_por_nome(nome):
     conexao = conectar()
 
@@ -146,3 +145,52 @@ def estoque_minimo():
         print(f"Quantidade: {produto[2]}")
         print(f"Minimo: {produto[3]}")
         print("-" * 15)
+
+def entrada_estoque(id_produto, qtd):
+    conexao =  conectar()
+
+    cursor = conexao.cursor()
+    
+    cursor.execute("SELECT * FROM produto WHERE id_produto = ?",(id_produto,))
+
+    produto = cursor.fetchone()
+
+    if produto is None:
+        print("Produto não encontrado!")
+        conexao.close()
+        return
+
+    nova_quantidade = produto[2] + qtd
+
+    cursor.execute("update produto set qtd = ? where id_produto = ?",(nova_quantidade, id_produto))    
+    
+    print(f"Entrada de {qtd} unidades no produto {produto[1]} realizada com sucesso!")
+    
+    conexao.commit()
+    
+    conexao.close()
+
+def saida_estoque(id_produto, qtd):
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM produto WHERE id_produto = ?", (id_produto,))
+    
+
+    produto =  cursor.fetchone()
+
+    if produto is None:
+        print("Prouduto não encontrado!")
+        conexao.close()
+        return
+    
+    nova_quantidade = produto[2] - qtd
+
+    cursor.execute("UPDATE produto SET qtd = qtd - ? WHERE id_produto = ? AND qtd >= ?", (qtd, nova_quantidade,id_produto))
+    
+    print(f"Saída de {qtd} unidades do produto {produto[1]} realizada com sucesso!")
+
+    conexao.commit()
+    
+    conexao.close()

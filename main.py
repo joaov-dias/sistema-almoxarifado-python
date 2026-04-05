@@ -1,4 +1,4 @@
-from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo
+from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 
 
 def mostrar_menu():
@@ -9,6 +9,8 @@ def mostrar_menu():
     print("4 - Deletar produto")
     print("5 - Buscar por nome")
     print("6 - Estoque mínimo")
+    print("7 - Entrada estoque")
+    print("8 - Saida Estoque")
     print("0 - Sair")
 
 
@@ -19,11 +21,12 @@ def main():
 
         # LISTAR PRODUTOS
         if opcao == "1":
+            print("LISTAR PRODUTOS")
             listar_produtos()
 
         # ATUALIZAR PRODUTO
         elif opcao == "2":
-
+            print("ATUALIZAR PRODUTO")
             while True:
                 try:
                     id_produto = int(input("Id do produto: "))
@@ -49,7 +52,7 @@ def main():
 
         # CADASTRAR PRODUTO
         elif opcao == "3":
-
+            print("CADASTRAR PRODUTO")
             nome = input("Nome: ")
 
             while True:
@@ -76,7 +79,7 @@ def main():
 
         # DELETAR PRODUTO
         elif opcao == "4":
-
+            print("DELETAR PRODUTO")
             while True:
                 try:
                     id_produto = int(input("Id do produto: "))
@@ -88,18 +91,34 @@ def main():
 
         # BUSCAR POR NOME
         elif opcao == "5":
-
+            print("BUSCAR POR NOME")
             nome= input("Nome do produto:")
             buscar_por_nome(nome)
 
         # ESTOQUE MÍNIMO
         elif opcao == "6":
+            print("ESTOQUE MÍNIMO")
             estoque_minimo()
-        # SAIR
+
+        #ENTRADA DE PRODUTOS
+        elif opcao == "7":
+            print("ENTRADA DE PRODUTO")
+            id_produto = input("ID do produto: ")
+            qtd = int(input("Quantidade de entrada de produto: "))
+            entrada_estoque(id_produto,qtd)
+       
+        # SAIR DE PRODUTOS
+        elif opcao == "8":
+            print("SAÍDA DE PRODUTO")
+            id_produto = input("ID do produto: ")
+            qtd = int(input("Quantidade de saída de produto: "))
+            saida_estoque(id_produto,qtd)
+
+
         elif opcao == "0":
             print("Saindo...")
             break
-
+        
         # OPÇÃO INVÁLIDA
         else:
             print("Opção inválida!")
