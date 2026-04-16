@@ -7,3 +7,4 @@ def conectar():
     
     except sqlite3.Error as erro:
         print("Erro ao conectar ao banco",erro)
+

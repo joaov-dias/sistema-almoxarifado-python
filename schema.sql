@@ -1,16 +1,16 @@
 BEGIN TRANSACTION;
 
-CREATE TABLE IF NOT EXISTS "movimentacao" (
-"id_movi" INTEGER NOT NULL,
-"id_produto" INTEGER NOT NULL,
-"id_usuario" INTEGER NOT NULL,
-"data_hora" TEXT NOT NULL,
-"qtd_movi" INTEGER,
-"obs" TEXT,
-"tipo_movi" TEXT,
-PRIMARY KEY("id_movi" AUTOINCREMENT),
-FOREIGN KEY("id_produto") REFERENCES "produto"("id_produto"),
-FOREIGN KEY("id_usuario") REFERENCES "usuario"("id_usuario")
+CREATE TABLE IF NOT EXISTS movimentacao (
+    id_movi INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_produto INTEGER NOT NULL,
+    id_usuario INTEGER NOT NULL,
+    data_hora DATETIME NOT NULL,
+    qtd_movi INTEGER NOT NULL,
+    tipo_movi TEXT NOT NULL CHECK(tipo_movi IN ('entrada', 'saida')),
+    obs TEXT,
+
+    FOREIGN KEY (id_produto) REFERENCES produto(id_produto),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
 CREATE TABLE IF NOT EXISTS "produto" (
