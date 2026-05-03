@@ -1,4 +1,5 @@
 from conexao import conectar
+from movimentacao import registrar_movimentacao
 
 def cadastrar_produto(nome, qtd, descricao, categoria, qtd_minima, local):
     conexao = conectar()
@@ -29,9 +30,15 @@ def listar_produtos ():
 
        
         produtos = cursor.fetchall()
-
+        
         for produto in produtos:
-            print(produto)
+            print(f"Id: {produto[0]}")
+            print(f"Nome: {produto[1]}")
+            print(f"Quantidade: {produto[2]}")
+            print(f"Categoria: {produto[3]}")
+            print(f"Local: {produto[4]}")
+            print("-" * 15)
+            
     
     except Exception as erro:
 
@@ -146,7 +153,7 @@ def estoque_minimo():
         print(f"Minimo: {produto[3]}")
         print("-" * 15)
 
-def entrada_estoque(id_produto, qtd):
+def entrada_estoque(id_produto, qtd,id_usuario, obs):
     conexao =  conectar()
 
     cursor = conexao.cursor()
@@ -164,13 +171,16 @@ def entrada_estoque(id_produto, qtd):
 
     cursor.execute("update produto set qtd = ? where id_produto = ?",(nova_quantidade, id_produto))    
     
-    print(f"Entrada de {qtd} unidades no produto {produto[1]} realizada com sucesso!")
+
+    registrar_movimentacao(cursor,id_produto, id_usuario, qtd, "entrada", obs)
+
+    print(f"Entrada de {qtd} unidades do produto {produto[1]} registrada com sucesso!")
     
     conexao.commit()
     
     conexao.close()
 
-def saida_estoque(id_produto, qtd):
+def saida_estoque(id_produto, qtd, id_usuario, obs):
     conexao = conectar()
 
     cursor = conexao.cursor()
@@ -184,13 +194,18 @@ def saida_estoque(id_produto, qtd):
         print("Prouduto não encontrado!")
         conexao.close()
         return
-    
-    nova_quantidade = produto[2] - qtd
 
-    cursor.execute("UPDATE produto SET qtd = qtd - ? WHERE id_produto = ? AND qtd >= ?", (qtd, nova_quantidade,id_produto))
+    cursor.execute("UPDATE produto SET qtd = qtd - ? WHERE id_produto = ? AND qtd >= ?", (qtd, id_produto, qtd))
+
+    if cursor.rowcount == 0:
+        print("Quantidade insuficiente para saída de estoque!")
+        conexao.close()
+        return
     
     print(f"Saída de {qtd} unidades do produto {produto[1]} realizada com sucesso!")
 
+    registrar_movimentacao(cursor,id_produto, id_usuario, qtd, "saida", obs)
+    print(f"Saída de {qtd} unidades do produto {produto[1]} registrada com sucesso!")
+
     conexao.commit()
-    
     conexao.close()
