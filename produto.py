@@ -157,6 +157,11 @@ def entrada_estoque(id_produto, qtd,id_usuario, obs):
     conexao =  conectar()
 
     cursor = conexao.cursor()
+
+    if qtd <= 0:
+        print("Quantidade Invalida! Deve ser Superior a zero")
+        conexao.close()
+        return
     
     cursor.execute("SELECT * FROM produto WHERE id_produto = ?",(id_produto,))
 
@@ -184,6 +189,10 @@ def saida_estoque(id_produto, qtd, id_usuario, obs):
     conexao = conectar()
 
     cursor = conexao.cursor()
+    if qtd <= 0:
+        print("\n\nQuantidade invalida! Deve ser maio que Zero!")
+        conexao.close()
+        return
 
     cursor.execute("SELECT * FROM produto WHERE id_produto = ?", (id_produto,))
     

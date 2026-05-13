@@ -1,24 +1,22 @@
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
+from usuario import cadastrar_usuario
 
 def mostrar_menu():
     print("\n"+"*" * 5 + "MENU AlMOXARIFADO"+ "*" * 5)
    
 
-    print("[CONSULTA]")
+   
     print("1 - Listar produtos")
     print("2 - Buscar Produto")
-
-    print("[MOVIMENTAÇOES]")
     print("3 - Entrada estoque")
     print("4 - Saída estoque")
     print("5 - Movimentações")
-
-    print("[CADASTRO]")
     print("6 - Cadastrar produto")
     print("7 - Atualizar produto")
     print("8 - Deletar produto")
-    #print("9 - Cadastro usuário")
+    print("9 - Estoque mínimo")
+    print("10 - Cadastrar usuário")
 
     print("[SAIR]")
     print("0 - Sair")
@@ -114,6 +112,12 @@ def main():
             print("\nESTOQUE MÍNIMO")
             print("-" * 35)
             estoque_minimo()
+
+        # 10 - CADASTRAR USUÁRIO
+        elif opcao == "10":
+            print("\nCADASTRAR USUÁRIO")
+            print("-" * 35)
+            cadastrar_usuario()
 
         # 0 - SAIR
         elif opcao == "0":
