@@ -11,12 +11,11 @@ def cadastrar_usuario():
     setor = input("Digite o setor do usuário: ")
     cargo = input("Digite o cargo do usuário: (ADMIN ou USUARIO)").upper()
     status = "ATIVO"
-    data_criacao = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+    data_criacao = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     try:
         if cargo not in ["ADMIN", "USUARIO"]:
             print("Cargo invalido! somente ADMIN ou USUARIO")
-            conexao.close()
             return
         
         cursor.execute("""
@@ -33,3 +32,46 @@ def cadastrar_usuario():
     
     finally:
         conexao.close()
+
+def login ():
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    email = input("Digite seu Email:")
+    senha =  input("Digite sua senha:")
+
+    try:
+        cursor.execute("""
+                  SELECT id_usuario,nome, email,cargo,status FROM usuario WHERE email=? AND senha=?
+                       """,(email,senha))
+        
+
+        usuario = cursor.fetchone()
+
+        if usuario:
+            if usuario[4] == "ATIVO":
+                    print(f"Bem vindo,{usuario[1]}!")
+                    print(f"Cargo:{usuario[3]}")
+                    print(f"Login realizado com sucesso!")
+
+                    return{
+                    "id_usuario":usuario[0],
+                    "nome":usuario[1],
+                    "email":usuario[2],
+                    "cargo":usuario[3],
+                    "status":usuario[4],}
+            else:
+                print("Usuario inativo, procure um Administrador!")
+                return None
+        else:
+            print("Email ou senha errado!")
+            return None
+        
+    except Exception as erro:
+        print(f"Erro ao fazer login: {erro}")
+        return None
+
+
+    finally:
+        conexao.close()
+            

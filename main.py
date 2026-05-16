@@ -1,12 +1,9 @@
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
-from usuario import cadastrar_usuario
+from usuario import cadastrar_usuario,login
 
-def mostrar_menu():
+def mostrar_menu(nome, cargo):
     print("\n"+"*" * 5 + "MENU AlMOXARIFADO"+ "*" * 5)
-   
-
-   
     print("1 - Listar produtos")
     print("2 - Buscar Produto")
     print("3 - Entrada estoque")
@@ -23,8 +20,14 @@ def mostrar_menu():
 
 
 def main():
+    usuario_logado = login()
+    if not usuario_logado:
+        print("Falha no login! Encerrando o sistema...")
+        return
+    
+
     while True:
-        mostrar_menu()
+        mostrar_menu(usuario_logado["nome"], usuario_logado["cargo"])
         opcao = input("Escolha uma opção: ")
 
         # 1 - LISTAR PRODUTOS
@@ -47,7 +50,7 @@ def main():
 
             id_produto = input("ID do produto: ")
             qtd = int(input("Quantidade de entrada: "))
-            user = input("Usuário: ")
+            user = usuario_logado["nome"]
             obs = input("Observação: ")
 
             entrada_estoque(id_produto, qtd, user, obs)
@@ -59,7 +62,7 @@ def main():
 
             id_produto = input("ID do produto: ")
             qtd = int(input("Quantidade de saída: "))
-            user = input("Usuário: ")
+            user = usuario_logado["nome"]
             obs = input("Observação: ")
 
             saida_estoque(id_produto, qtd, user, obs)
