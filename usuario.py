@@ -50,7 +50,7 @@ def login ():
 
         if usuario:
             if usuario[4] == "ATIVO":
-                    print(f"Bem vindo,{usuario[1]}!")
+                    print(f"\nBem vindo,{usuario[1]}!")
                     print(f"Cargo:{usuario[3]}")
                     print(f"Login realizado com sucesso!")
 

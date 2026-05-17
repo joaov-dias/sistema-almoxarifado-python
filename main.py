@@ -1,21 +1,32 @@
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
 from usuario import cadastrar_usuario,login
+from datetime import datetime
 
 def mostrar_menu(nome, cargo):
-    print("\n"+"*" * 5 + "MENU AlMOXARIFADO"+ "*" * 5)
+    print("\n"+"-" * 5 + "MENU AlMOXARIFADO"+ "-" * 5)
+
+    print(f"Usuario logado: {nome}!")
+    print(f"Cargo: {cargo}")
+    print(f"Data de acesso: {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}")
+
+    print("-" * 40)
+
     print("1 - Listar produtos")
     print("2 - Buscar Produto")
     print("3 - Entrada estoque")
     print("4 - Saída estoque")
-    print("5 - Movimentações")
-    print("6 - Cadastrar produto")
-    print("7 - Atualizar produto")
-    print("8 - Deletar produto")
-    print("9 - Estoque mínimo")
-    print("10 - Cadastrar usuário")
+    print("5 - Estoque mínimo")
 
-    print("[SAIR]")
+    
+    if cargo == "ADMIN":
+        print("-" * 3 + "ADMINISTRADOR" + "-" * 3)
+        print("6 - Cadastrar produto")
+        print("7 - Atualizar produto")
+        print("8 - Deletar produto")
+        print("9 - Movimentações")
+        print("10 - Cadastrar usuário")
+
     print("0 - Sair")
 
 
@@ -29,7 +40,7 @@ def main():
     while True:
         mostrar_menu(usuario_logado["nome"], usuario_logado["cargo"])
         opcao = input("Escolha uma opção: ")
-
+        #MENU COMUM INDEPENDENTE DO CARGO
         # 1 - LISTAR PRODUTOS
         if opcao == "1":
             print("\nLISTAR PRODUTOS")
@@ -67,14 +78,17 @@ def main():
 
             saida_estoque(id_produto, qtd, user, obs)
 
-        # 5 - HISTÓRICO
+        # 5 - ESTOQUE MÍNIMO
         elif opcao == "5":
-            print("\nHISTÓRICO DE MOVIMENTAÇÕES")
+            print("\nESTOQUE MÍNIMO")
             print("-" * 35)
-            listar_movimentacoes()
+            estoque_minimo()
 
+        #MENU RESTRITO PARA ADMINISTRADOR
         # 6 - CADASTRAR PRODUTO
         elif opcao == "6":
+            if not verificar_admin(usuario_logado):
+                continue
             print("\nCADASTRAR PRODUTO")
             print("-" * 35)
 
@@ -89,6 +103,8 @@ def main():
 
         # 7 - ATUALIZAR PRODUTO
         elif opcao == "7":
+            if not verificar_admin(usuario_logado):
+                continue
             print("\nATUALIZAR PRODUTO")
             print("-" * 35)
 
@@ -97,27 +113,33 @@ def main():
             descricao = input("Descrição: ")
             categoria = input("Categoria: ")
             qtd_minima = int(input("Quantidade mínima: "))
-            status = input("Status: ")
+            status = input("Status: ").upper()
             local = input("Local: ")
 
             atualizar_produto(id_produto,nome,descricao,categoria,qtd_minima,status,local)
 
         # 8 - DELETAR PRODUTO
         elif opcao == "8":
+            if not verificar_admin(usuario_logado):
+                continue
             print("\nDELETAR PRODUTO")
             print("-" * 35)
 
             id_produto = int(input("ID do produto: "))
             deletar_produto(id_produto)
 
-        # 9 - ESTOQUE MÍNIMO
+        # 9 - MOVIMENTAÇÕES
         elif opcao == "9":
-            print("\nESTOQUE MÍNIMO")
+            if not verificar_admin(usuario_logado):
+                continue
+            print("\nMOVIMENTAÇÕES")
             print("-" * 35)
-            estoque_minimo()
+            listar_movimentacoes()
 
         # 10 - CADASTRAR USUÁRIO
         elif opcao == "10":
+            if not verificar_admin(usuario_logado):
+                continue
             print("\nCADASTRAR USUÁRIO")
             print("-" * 35)
             cadastrar_usuario()
@@ -129,6 +151,12 @@ def main():
 
         else:
             print("Opção inválida!")
+
+def verificar_admin(usuario):
+    if usuario["cargo"] != "ADMIN":
+        print("Acesso negado! Apenas administradores podem acessar esta opção.")
+        return False
+    return True
 
 if __name__ == "__main__":
     main()
