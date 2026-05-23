@@ -87,7 +87,7 @@ def main():
         #MENU RESTRITO PARA ADMINISTRADOR
         # 6 - CADASTRAR PRODUTO
         elif opcao == "6":
-            if not verificar_admin(usuario_logado):
+            if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nCADASTRAR PRODUTO")
             print("-" * 35)
@@ -103,7 +103,7 @@ def main():
 
         # 7 - ATUALIZAR PRODUTO
         elif opcao == "7":
-            if not verificar_admin(usuario_logado):
+            if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nATUALIZAR PRODUTO")
             print("-" * 35)
@@ -120,7 +120,7 @@ def main():
 
         # 8 - DELETAR PRODUTO
         elif opcao == "8":
-            if not verificar_admin(usuario_logado):
+            if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nDELETAR PRODUTO")
             print("-" * 35)
@@ -130,7 +130,7 @@ def main():
 
         # 9 - MOVIMENTAÇÕES
         elif opcao == "9":
-            if not verificar_admin(usuario_logado):
+            if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nMOVIMENTAÇÕES")
             print("-" * 35)
@@ -138,7 +138,7 @@ def main():
 
         # 10 - CADASTRAR USUÁRIO
         elif opcao == "10":
-            if not verificar_admin(usuario_logado):
+            if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nCADASTRAR USUÁRIO")
             print("-" * 35)
@@ -152,9 +152,9 @@ def main():
         else:
             print("Opção inválida!")
 
-def verificar_admin(usuario):
-    if usuario["cargo"] != "ADMIN":
-        print("Acesso negado! Apenas administradores podem acessar esta opção.")
+def verificar_permissao(usuario,cargos_permitido ):
+    if usuario["cargo"] not in cargos_permitido:
+        print("Acesso negado! Voce não tem permissao para usar essa função")
         return False
     return True
 

@@ -50,22 +50,22 @@ def login ():
 
         if usuario:
             if usuario[4] == "ATIVO":
-                    print(f"\nBem vindo,{usuario[1]}!")
-                    print(f"Cargo:{usuario[3]}")
-                    print(f"Login realizado com sucesso!")
+                print(f"\nBem vindo,{usuario[1]}!")
+                print(f"Cargo:{usuario[3]}")
+                print(f"Login realizado com sucesso!")
 
-                    return{
-                    "id_usuario":usuario[0],
+                return{
+                "id_usuario":usuario[0],
                     "nome":usuario[1],
-                    "email":usuario[2],
-                    "cargo":usuario[3],
-                    "status":usuario[4],}
+                "email":usuario[2],
+                "cargo":usuario[3],
+                "status":usuario[4],}
             else:
                 print("Usuario inativo, procure um Administrador!")
                 return None
         else:
-            print("Email ou senha errado!")
-            return None
+                print("Email ou senha errado!")
+                return None
         
     except Exception as erro:
         print(f"Erro ao fazer login: {erro}")
@@ -75,3 +75,4 @@ def login ():
     finally:
         conexao.close()
             
+

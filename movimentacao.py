@@ -29,9 +29,9 @@ def listar_movimentacoes():
         movimentacao.data_hora
         FROM movimentacao
         JOIN produto 
-            ON 
-            movimentacao.id_produto = produto.id_produto
-            ORDER BY movimentacao.data_hora DESC
+        ON 
+        movimentacao.id_produto = produto.id_produto
+        ORDER BY movimentacao.data_hora DESC
         """)
 
         movimentacoes = cursor.fetchall()
