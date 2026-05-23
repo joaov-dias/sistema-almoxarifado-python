@@ -4,7 +4,6 @@ from datetime import datetime
 def cadastrar_usuario():
     conexao = conectar()
     cursor = conexao.cursor()
-
     nome = input("Digite o nome do usuário: ")
     email = input("Digite o email do usuário: ")
     senha = input("Digite a senha do usuário: ")
@@ -18,11 +17,8 @@ def cadastrar_usuario():
             print("Cargo invalido! somente ADMIN ou USUARIO")
             return
         
-        cursor.execute("""
-    INSERT INTO usuario
-    (nome, email, senha, setor, cargo, status, data_criacao)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-""", (nome, email, senha, setor, cargo, status, data_criacao))
+        cursor.execute("""INSERT INTO usuario (nome, email, senha, setor, cargo, status, data_criacao)
+    VALUES (?, ?, ?, ?, ?, ?, ?)""", (nome, email, senha, setor, cargo, status, data_criacao))
         conexao.commit()
 
         print("Usuario cadastrado com sucesso!")
@@ -36,16 +32,11 @@ def cadastrar_usuario():
 def login ():
     conexao = conectar()
     cursor = conexao.cursor()
-
     email = input("Digite seu Email:")
     senha =  input("Digite sua senha:")
-
     try:
-        cursor.execute("""
-                  SELECT id_usuario,nome, email,cargo,status FROM usuario WHERE email=? AND senha=?
-                       """,(email,senha))
+        cursor.execute("SELECT id_usuario,nome, email,cargo,status FROM usuario WHERE email=? AND senha=?",(email,senha))
         
-
         usuario = cursor.fetchone()
 
         if usuario:
@@ -70,9 +61,30 @@ def login ():
     except Exception as erro:
         print(f"Erro ao fazer login: {erro}")
         return None
-
-
     finally:
         conexao.close()
             
+
+def listar_usuario():
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id_usuario, nome, email, cargo, setor, status, data_criacao FROM usuario ORDER BY status, nome")
+    usuarios = cursor.fetchall()
+
+    if not usuarios:
+        print("Nenhum usuario encontrado!")
+    else:
+        print("\nLISTA DE USUARIOS")
+        print("-" * 30)
+        for usuario in usuarios:
+            print(f"\nID: {usuario[0]}")
+            print(f"Nome: {usuario[1]}")
+            print(f"Email: {usuario[2]}")
+            print(f"Cargo: {usuario[3]}")
+            print(f"Setor: {usuario[4]}")
+            print(f"Status: {usuario[5]}")
+            print(f"Data de Criação: {usuario[6]}")
+            print("-" * 30)
+
+    conexao.close()
 
