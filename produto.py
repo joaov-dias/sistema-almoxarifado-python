@@ -100,7 +100,7 @@ def buscar_por_nome(nome):
 
     cursor = conexao.cursor()
 
-    sql = """SELECT * FROM produto WHERE nome LIKE ?"""
+    sql = "SELECT * FROM produto WHERE nome LIKE ?"
         
     cursor.execute(sql,(f"%{nome}%",))
 

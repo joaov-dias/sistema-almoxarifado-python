@@ -62,8 +62,7 @@ def login ():
         print(f"Erro ao fazer login: {erro}")
         return None
     finally:
-        conexao.close()
-            
+        conexao.close()  
 
 def listar_usuario():
     conexao = conectar()
@@ -88,3 +87,95 @@ def listar_usuario():
 
     conexao.close()
 
+def buscar_usuario():
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    email = input("Email do usuario:").strip()
+
+    try:
+        sql = "SELECT id_usuario, nome,email, setor,cargo,status,data_criacao FROM usuario WHERE email LIKE ?"
+        cursor.execute(sql,(f"%{email}%",))
+        usuarios=cursor.fetchall()
+        
+        if not usuarios:
+            print("Nenhum usuario encontrado!")
+        else:
+            print("\n-----USUARIOS ENCONTRADOS-----")
+            for usuario in usuarios:
+                print(f"\nID Usuario: {usuario[0]}")
+                print(f"Nome: {usuario[1]}")
+                print(f"Email: {usuario[2]}")
+                print(f"Setor: {usuario[3]}")
+                print(f"Cargo: {usuario[4]}")
+                print(f"Status: {usuario[5]}")         
+                print(f"Data de Criação: {usuario[6]}")
+                print("-" * 30)
+
+    except Exception as erro:
+        print(f"Erro: {erro}")
+    
+    finally:
+        conexao.close()
+
+def atualizar_usuario():
+    conexao = conectar()
+    cursor = conexao.cursor()
+    id_user = input("ID usuario:").strip()
+    if not id_user.isdigit():
+        print("ID invalido! Digite um numero.")
+        conexao.close()
+        return
+    id_user = int(id_user)
+    
+    try:
+        sql_consulta = """SELECT nome, email, cargo, setor FROM usuario WHERE id_usuario = ? """
+
+        cursor.execute(sql_consulta,(id_user,))
+
+        consulta=cursor.fetchone()
+
+        if consulta:
+            print("-----USUARIO ENCONTRADO-----")
+            print(f"ID usuario: {id_user}")
+            print(f"Nome: {consulta[0]}")
+            print(f"Email: {consulta[1]}")
+            print(f"Cargo: {consulta[2]}")
+            print(f"Setor: {consulta[3]}")
+
+            print("Se desejar manter alguma informação, é só apertar ENTER.")
+            nome =input("NOME: ").upper()
+            email =input("EMAIL: ")
+            cargo =input("CARGO: ADMIN/USUARIO ").strip().upper()
+            setor =input("SETOR: ")
+
+            if nome == "":
+                nome = consulta[0]
+
+            if email == "":
+                email = consulta[1]
+
+            if cargo == "":
+                cargo = consulta[2]
+                
+            elif cargo not in ["ADMIN", "USUARIO"]:
+                    print("Cargo inválido! Somente ADMIN ou USUARIO.")
+                    return
+
+            if setor == "":
+                setor = consulta[3]
+
+            sql = "UPDATE usuario SET nome = ?, email = ?,cargo =?,setor=? WHERE id_usuario = ?"
+
+            cursor.execute(sql,(nome, email,cargo,setor,id_user,))
+            conexao.commit()
+            print("Usuario atualizado com sucesso!")
+                 
+        else:
+            print("-----Usuario não encontrado!-----")
+    
+    except Exception as erro:
+        print(f"Erro:{erro}")
+
+    finally:
+        conexao.close()
