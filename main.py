@@ -1,6 +1,6 @@
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
-from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario
+from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario,alterar_status_usuario
 from datetime import datetime
 
 def mostrar_menu(nome, cargo):
@@ -29,6 +29,7 @@ def mostrar_menu(nome, cargo):
         print("11 - Listar usuários")
         print("12 - Buscar usuario por email")
         print("13 - Atualizar usuario")
+        print("14 - Alterar status usuario")
 
     print("0 - Sair")
 
@@ -164,6 +165,12 @@ def main():
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             atualizar_usuario()
+
+        #14
+        elif opcao == "14":
+            if not verificar_permissao(usuario_logado,["ADMIN"]):
+                continue
+            alterar_status_usuario(usuario_logado)
 
         # 0 - SAIR
         elif opcao == "0":

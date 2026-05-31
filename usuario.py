@@ -118,18 +118,18 @@ def buscar_usuario():
     finally:
         conexao.close()
 
-def atualizar_usuario():
+def atualizar_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
-    id_user = input("ID usuario:").strip()
-    if not id_user.isdigit():
+    id_user = input("ID usuário:").strip()
+    if not id_user.isdigit(): #Se não for numero
         print("ID invalido! Digite um numero.")
         conexao.close()
         return
     id_user = int(id_user)
     
     try:
-        sql_consulta = """SELECT nome, email, cargo, setor FROM usuario WHERE id_usuario = ? """
+        sql_consulta = "SELECT nome, email, cargo, setor FROM usuario WHERE id_usuario = ?"
 
         cursor.execute(sql_consulta,(id_user,))
 
@@ -142,11 +142,12 @@ def atualizar_usuario():
             print(f"Email: {consulta[1]}")
             print(f"Cargo: {consulta[2]}")
             print(f"Setor: {consulta[3]}")
-
+            
             print("Se desejar manter alguma informação, é só apertar ENTER.")
             nome =input("NOME: ").upper()
             email =input("EMAIL: ")
             cargo =input("CARGO: ADMIN/USUARIO ").strip().upper()
+            
             setor =input("SETOR: ")
 
             if nome == "":
@@ -157,10 +158,14 @@ def atualizar_usuario():
 
             if cargo == "":
                 cargo = consulta[2]
-                
-            elif cargo not in ["ADMIN", "USUARIO"]:
+                            
+            if cargo not in ["ADMIN", "USUARIO"]:
                     print("Cargo inválido! Somente ADMIN ou USUARIO.")
                     return
+            
+            if usuario_logado["id_usuario"] == id_user and cargo != consulta[2]:
+                print("Não é permitido alterar seu próprio cargo.")
+                return 
 
             if setor == "":
                 setor = consulta[3]
@@ -177,5 +182,54 @@ def atualizar_usuario():
     except Exception as erro:
         print(f"Erro:{erro}")
 
+    finally:
+        conexao.close()
+
+def alterar_status_usuario(usuario_logado):
+    conexao = conectar()
+    cursor = conexao.cursor()
+    id_user = input("Id usuário:").strip()
+    
+    if not id_user.isdigit():
+        print("Digite apenas o NUMERO do ID do usuario.")
+        conexao.close()
+        return
+    
+    id_user = int(id_user)    
+    
+    try:
+        cursor.execute("SELECT nome, email, setor, cargo, status, data_criacao FROM usuario WHERE id_usuario = ?",(id_user,))
+        consulta = cursor.fetchone()
+
+        if consulta:
+            print("-----USUARIO ENCONTRADO-----")
+            print(f"ID usuario: {id_user}")
+            print(f"Nome: {consulta[0]}")
+            print(f"Email: {consulta[1]}")
+            print(f"Setor: {consulta[2]}")
+            print(f"Cargo: {consulta[3]}")
+            print(f"Status: {consulta[4]}")
+            print(f"Data Criação: {consulta[5]}")
+
+            if usuario_logado["id_usuario"] == id_user:
+                print("Não é permitido alterar seu próprio status.")
+                return
+            
+            novo_status=input("Novo status (ATIVO/INATIVO): ").strip().upper()
+
+            if novo_status not in ["ATIVO", "INATIVO"]:
+                print("Status inválido, Somente ATIVO ou INATIVO.")
+                return
+            
+            cursor.execute("UPDATE usuario SET status = ? WHERE id_usuario = ?",(novo_status,id_user,))  
+            conexao.commit()
+            print(f"Status alterado para {novo_status}, com sucesso!")
+
+        else:
+            print("-----Usuario NÃO encontrado!-----")
+
+    except Exception as erro:
+        print(f"Erro:{erro}")
+    
     finally:
         conexao.close()
