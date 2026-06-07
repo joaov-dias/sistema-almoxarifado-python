@@ -164,9 +164,9 @@ def main():
         elif opcao == "13":  
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
-            atualizar_usuario()
+            atualizar_usuario(usuario_logado)
 
-        #14
+        #14 - ALTERAR STATUS USUÁRIO
         elif opcao == "14":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue

@@ -1,7 +1,8 @@
 __pycache__/
 *.pyc
 *.db
-criar_adm.py
+criar_adm.py/
+almoxarifado.db-journal/
 .tmp.driveupload/
 
 
