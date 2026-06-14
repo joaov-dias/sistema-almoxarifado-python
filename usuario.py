@@ -246,3 +246,50 @@ def alterar_status_usuario(usuario_logado):
     
     finally:
         conexao.close()
+
+def alterar_senha(usuario_logado):
+    conexao = conectar()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("SELECT senha FROM usuario WHERE id_usuario = ?",(usuario_logado["id_usuario"],))
+    
+        senha_hash = cursor.fetchone()[0]
+
+        senha_antiga = input("Senha antiga:").strip()
+
+        senha_correta = bcrypt.checkpw(senha_antiga.encode("utf-8"), senha_hash.encode("utf-8"))
+
+        if not senha_correta:
+            print("Senha incorreta.")
+            return
+        
+        while True:
+            nova_senha = input("Digite a nova Senha: ").strip()
+
+            confirmar_senha =input("Digite novamente a NOVA senha: ").strip()
+
+            if nova_senha == confirmar_senha:
+                break
+            else:
+                print("As senhas não coincidem.")
+
+        novo_hash = bcrypt.hashpw(nova_senha.encode("utf-8"),bcrypt.gensalt()).decode("utf-8")
+
+        cursor.execute("UPDATE usuario SET senha= ? WHERE id_usuario = ?",(novo_hash,usuario_logado["id_usuario"],))
+        conexao.commit()
+
+        print("Senha alterada com sucesso!")
+
+          
+
+
+    except Exception as erro:
+        print(f"Erro: {erro}")
+
+    finally:
+        conexao.close()
+    
+
+
+
+

@@ -88,6 +88,8 @@ def main():
             print("-" * 35)
             estoque_minimo()
 
+        
+
         #MENU RESTRITO PARA ADMINISTRADOR
         # 6 - CADASTRAR PRODUTO
         elif opcao == "6":
