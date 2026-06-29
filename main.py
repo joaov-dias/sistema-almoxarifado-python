@@ -1,6 +1,6 @@
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
-from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario,alterar_status_usuario
+from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario,alterar_status_usuario, alterar_senha
 from datetime import datetime
 
 def mostrar_menu(nome, cargo):
@@ -17,19 +17,20 @@ def mostrar_menu(nome, cargo):
     print("3 - Entrada estoque")
     print("4 - Saída estoque")
     print("5 - Estoque mínimo")
+    print("6 - Alterar senha usuário")
 
     
     if cargo == "ADMIN":
         print("-" * 3 + "ADMINISTRADOR" + "-" * 3)
-        print("6 - Cadastrar produto")
-        print("7 - Atualizar produto")
-        print("8 - Deletar produto")
-        print("9 - Movimentações")
-        print("10 - Cadastrar usuário")
-        print("11 - Listar usuários")
-        print("12 - Buscar usuario por email")
-        print("13 - Atualizar usuario")
-        print("14 - Alterar status usuario")
+        print("7 - Cadastrar produto")
+        print("8 - Atualizar produto")
+        print("9 - Deletar produto")
+        print("10 - Movimentações")
+        print("11 - Cadastrar usuário")
+        print("12 - Listar usuários")
+        print("13 - Buscar usuario por email")
+        print("14 - Atualizar usuario")
+        print("15 - Alterar status usuario")
 
     print("0 - Sair")
 
@@ -88,11 +89,17 @@ def main():
             print("-" * 35)
             estoque_minimo()
 
+        #6- ALTERAR SENHA USUÁRIO
+        elif opcao == "6":
+            print("\nALTERAR SENHA USUÁRIO")
+            print("-" * 35)
+            alterar_senha(usuario_logado)
+
         
 
         #MENU RESTRITO PARA ADMINISTRADOR
-        # 6 - CADASTRAR PRODUTO
-        elif opcao == "6":
+        # 7 - CADASTRAR PRODUTO
+        elif opcao == "7":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nCADASTRAR PRODUTO")
@@ -107,8 +114,8 @@ def main():
 
             cadastrar_produto(nome, qtd, descricao, categoria, qtd_minima, local)
 
-        # 7 - ATUALIZAR PRODUTO
-        elif opcao == "7":
+        # 8 - ATUALIZAR PRODUTO
+        elif opcao == "8":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nATUALIZAR PRODUTO")
@@ -124,8 +131,8 @@ def main():
 
             atualizar_produto(id_produto,nome,descricao,categoria,qtd_minima,status,local)
 
-        # 8 - DELETAR PRODUTO
-        elif opcao == "8":
+        # 9 - DELETAR PRODUTO
+        elif opcao == "9":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nDELETAR PRODUTO")
@@ -134,42 +141,42 @@ def main():
             id_produto = int(input("ID do produto: "))
             deletar_produto(id_produto)
 
-        # 9 - MOVIMENTAÇÕES
-        elif opcao == "9":
+        # 10 - MOVIMENTAÇÕES
+        elif opcao == "10":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nMOVIMENTAÇÕES")
             print("-" * 35)
             listar_movimentacoes()
 
-        # 10 - CADASTRAR USUÁRIO
-        elif opcao == "10":
+        # 11 - CADASTRAR USUÁRIO
+        elif opcao == "11":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             print("\nCADASTRAR USUÁRIO")
             print("-" * 35)
-            cadastrar_usuario()
+            cadastrar_usuario(usuario_logado)
 
-        # 11 - LISTAR USUÁRIOS
-        elif opcao == "11":
+        # 12 - LISTAR USUÁRIOS
+        elif opcao == "12":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             listar_usuario()
 
-        # 12 - BUSCAR USUARIOS POR EMAIL
-        elif opcao == "12":
+        # 13 - BUSCAR USUARIOS POR EMAIL
+        elif opcao == "13":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             buscar_usuario()
 
-        #13 - ATUALIZAR USUARIO
-        elif opcao == "13":  
+        #14 - ATUALIZAR USUARIO
+        elif opcao == "14":  
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             atualizar_usuario(usuario_logado)
 
-        #14 - ALTERAR STATUS USUÁRIO
-        elif opcao == "14":
+        #15 - ALTERAR STATUS USUÁRIO
+        elif opcao == "15":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
             alterar_status_usuario(usuario_logado)

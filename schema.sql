@@ -13,29 +13,37 @@ CREATE TABLE IF NOT EXISTS movimentacao (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
-CREATE TABLE IF NOT EXISTS "produto" (
-"id_produto" INTEGER,
-"nome" TEXT NOT NULL,
-"qtd" INTEGER NOT NULL,
-"descricao" TEXT,
-"categoria" TEXT NOT NULL,
-"qtd_minima" INTEGER NOT NULL,
-"data_cadastro" TEXT NOT NULL,
-"status" TEXT NOT NULL,
-"local" TEXT NOT NULL,
-PRIMARY KEY("id_produto" AUTOINCREMENT)
+CREATE TABLE IF NOT EXISTS produto (
+    id_produto INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    qtd INTEGER NOT NULL,
+    descricao TEXT,
+    categoria TEXT NOT NULL,
+    qtd_minima INTEGER NOT NULL,
+    data_cadastro TEXT NOT NULL,
+    status TEXT NOT NULL,
+    local TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "usuario" (
-"id_usuario" INTEGER NOT NULL,
-"email" TEXT NOT NULL UNIQUE,
-"nome" TEXT NOT NULL,
-"senha" TEXT NOT NULL,
-"setor" TEXT NOT NULL,
-"cargo" TEXT NOT NULL,
-"status" TEXT NOT NULL,
-"data_criacao" TEXT NOT NULL,
-PRIMARY KEY("id_usuario" AUTOINCREMENT)
+CREATE TABLE IF NOT EXISTS usuario (
+    id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    nome TEXT NOT NULL,
+    senha TEXT NOT NULL,
+    setor TEXT NOT NULL,
+    cargo TEXT NOT NULL,
+    status TEXT NOT NULL,
+    data_criacao TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS logs (
+    id_log INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_usuario INTEGER NOT NULL,
+    acao TEXT NOT NULL,
+    descricao TEXT,
+    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
 COMMIT;

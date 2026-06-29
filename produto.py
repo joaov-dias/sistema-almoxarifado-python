@@ -1,7 +1,8 @@
 from conexao import conectar
 from movimentacao import registrar_movimentacao
+from logs import registrar_log
 
-def cadastrar_produto(nome, qtd, descricao, categoria, qtd_minima, local):
+def cadastrar_produto(nome, qtd, descricao, categoria, qtd_minima, local,usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
     try:
@@ -12,8 +13,9 @@ def cadastrar_produto(nome, qtd, descricao, categoria, qtd_minima, local):
         """,(nome, qtd, descricao, categoria, qtd_minima, 'Ativo', local))
 
         conexao.commit()
-    
+
         print("Produto cadastrado com sucesso!")
+        registrar_log(usuario_logado["id_usuario"],"CADASTRAR_PRODUTO",f"Cadastrou o produto {nome} ")
 
     except Exception as erro:
         print("Produto não cadastrado,", erro)
@@ -46,7 +48,7 @@ def listar_produtos ():
 
     conexao.close()
 
-def atualizar_produto(id_produto, nome, descricao, categoria, qtd_minima, status, local):
+def atualizar_produto(id_produto, nome, descricao, categoria, qtd_minima, status, local,usuario_logado):
 
     conexao = conectar()
 
@@ -68,11 +70,12 @@ def atualizar_produto(id_produto, nome, descricao, categoria, qtd_minima, status
     
     cursor.execute(sql,(nome, descricao, categoria, qtd_minima, status, local, id_produto))
     print("Produto atualizado!")
+    registrar_log(usuario_logado["id_usuario"],"ATUALIZAR_PRODUTO",f"Atualizou o produto {nome} ")
 
     conexao.commit()
     conexao.close()
 
-def deletar_produto(id_produto):
+def deletar_produto(id_produto,usuario_logado):
     conexao =conectar()
     cursor = conexao.cursor()
 
@@ -90,6 +93,7 @@ def deletar_produto(id_produto):
     cursor.execute(sql,(id_produto,))
 
     print(f'Produto {produto[0]} - {produto[1]}, {produto[3]} deletado com sucesso!')
+    registrar_log(usuario_logado["id_usuario"],"DELETAR_PRODUTO",f"Deletou o produto {produto[1]}(ID: {id_produto}) ")
 
     conexao.commit()
 

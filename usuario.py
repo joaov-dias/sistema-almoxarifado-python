@@ -1,8 +1,9 @@
 from conexao import conectar
 from datetime import datetime
 import bcrypt
+from logs import registrar_log
 
-def cadastrar_usuario():
+def cadastrar_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
     nome = input("Digite o nome do usuário: ")
@@ -24,6 +25,7 @@ def cadastrar_usuario():
         conexao.commit()
 
         print("Usuario cadastrado com sucesso!")
+        registrar_log(usuario_logado["id_usuario"],"CADASTRAR_USUARIO",f"Cadastrou o usuario {nome}")
 
     except Exception as erro:
         print(f"Erro ao cadastrar usuario:{erro}")
@@ -54,10 +56,11 @@ def login ():
                     print(f"\nBem vindo,{nome}!")
                     print(f"Cargo:{cargo}")
                     print(f"Login realizado com sucesso!")
+                    registrar_log(id_usuario,"LOGIN","Login realizado com sucesso")
 
                     return{
                     "id_usuario":id_usuario,
-                        "nome":nome,
+                    "nome":nome,
                     "email":email,
                     "cargo":cargo,
                     "status":status,}
@@ -188,6 +191,7 @@ def atualizar_usuario(usuario_logado):
             cursor.execute(sql,(nome, email,cargo,setor,id_user,))
             conexao.commit()
             print("Usuario atualizado com sucesso!")
+            registrar_log(usuario_logado["id_usuario"],"ATUALIZAR_USUARIO", f"Atualizou o usuario {nome}  (ID {id_user})")
                  
         else:
             print("-----Usuario não encontrado!-----")
@@ -237,6 +241,7 @@ def alterar_status_usuario(usuario_logado):
             cursor.execute("UPDATE usuario SET status = ? WHERE id_usuario = ?",(novo_status,id_user,))  
             conexao.commit()
             print(f"Status alterado para {novo_status}, com sucesso!")
+            registrar_log(usuario_logado["id_usuario"],"ALTERAR_STATUS_USUARIO",f"Usuario {consulta[0]}, ID:{id_user} para STATUS: {novo_status}" )
 
         else:
             print("-----Usuario NÃO encontrado!-----")
@@ -279,6 +284,7 @@ def alterar_senha(usuario_logado):
         conexao.commit()
 
         print("Senha alterada com sucesso!")
+        registrar_log (usuario_logado["id_usuario"],"ALTERAR_SENHA", f"Alteração da senha do usuário ID {usuario_logado['id_usuario']}.")
 
           
 

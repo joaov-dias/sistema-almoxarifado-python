@@ -23,7 +23,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?)
 """, (
     "Administrador",
     "admin",
-    senha_hash,  # agora salva hash
+    senha_hash,
     "TI",
     "ADMIN",
     "ATIVO",
