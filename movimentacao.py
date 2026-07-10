@@ -21,17 +21,16 @@ def listar_movimentacoes():
 
     try:
         cursor.execute("""
-        SELECT 
-        produto.nome,
-        movimentacao.id_usuario,
-        movimentacao.tipo_movi,
-        movimentacao.qtd_movi,
-        movimentacao.data_hora
-        FROM movimentacao
-        JOIN produto 
-        ON 
-        movimentacao.id_produto = produto.id_produto
-        ORDER BY movimentacao.data_hora DESC
+        SELECT
+    produto.nome,
+    movimentacao.id_usuario,
+    movimentacao.tipo_movi,
+    movimentacao.qtd_movi,
+    movimentacao.data_hora
+    FROM movimentacao
+    JOIN produto
+    ON movimentacao.id_produto = produto.id_produto
+    ORDER BY movimentacao.data_hora DESC
         """)
 
         movimentacoes = cursor.fetchall()

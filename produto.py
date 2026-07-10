@@ -69,10 +69,10 @@ def atualizar_produto(id_produto, nome, descricao, categoria, qtd_minima, status
            SET nome = ?, descricao = ?, categoria = ?, qtd_minima = ?, "status" = ?, "local" = ? WHERE id_produto = ? """)
     
     cursor.execute(sql,(nome, descricao, categoria, qtd_minima, status, local, id_produto))
-    print("Produto atualizado!")
-    registrar_log(usuario_logado["id_usuario"],"ATUALIZAR_PRODUTO",f"Atualizou o produto {nome} ")
-
+    
     conexao.commit()
+    registrar_log(usuario_logado["id_usuario"],"ATUALIZAR_PRODUTO",f"Atualizou o produto {nome} ")
+    print("Produto atualizado!")
     conexao.close()
 
 def deletar_produto(id_produto,usuario_logado):
