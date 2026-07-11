@@ -4,3 +4,4 @@ __pycache__/
 almoxarifado.db-journal/
 .tmp.driveupload/
 relatorios/
+criar_admin.py  
