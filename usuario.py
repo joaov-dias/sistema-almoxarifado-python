@@ -295,6 +295,11 @@ def alterar_senha(usuario_logado):
     finally:
         conexao.close()
     
+def verificar_permissao(usuario,cargos_permitido ):
+    if usuario["cargo"] not in cargos_permitido:
+        print("Acesso negado! Voce não tem permissao para usar essa função")
+        return False
+    return True
 
 
 

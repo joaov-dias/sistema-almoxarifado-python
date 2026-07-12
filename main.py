@@ -1,6 +1,6 @@
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
-from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario,alterar_status_usuario, alterar_senha
+from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario,alterar_status_usuario, alterar_senha,verificar_permissao
 from datetime import datetime
 from relatorio import menu_relatorio
 
@@ -34,6 +34,9 @@ def mostrar_menu(nome, cargo):
 
     print("0 - Sair")
 
+def mostrar_titulo(titulo):
+    print(f"\n{titulo}")
+    print("-" * 35)
 
 def main():
     usuario_logado = login()
@@ -45,104 +48,64 @@ def main():
     while True:
         mostrar_menu(usuario_logado["nome"], usuario_logado["cargo"])
         opcao = input("Escolha uma opção: ")
+
         #MENU COMUM INDEPENDENTE DO CARGO
         # 1 - LISTAR PRODUTOS
         if opcao == "1":
-            print("\nLISTAR PRODUTOS")
-            print("-" * 35)
+            mostrar_titulo("LISTAR PRODUTOS")
             listar_produtos()
 
         # 2 - BUSCAR PRODUTO
         elif opcao == "2":
-            print("\nBUSCAR PRODUTO")
-            print("-" * 35)
-            nome = input("Nome do produto: ")
-            buscar_por_nome(nome)
+            mostrar_titulo("BUSCAR PRODUTO")
+            buscar_por_nome()
 
         # 3 - ENTRADA ESTOQUE
         elif opcao == "3":
-            print("\nENTRADA DE ESTOQUE")
-            print("-" * 35)
-
-            id_produto = input("ID do produto: ")
-            qtd = int(input("Quantidade de entrada: "))
+            mostrar_titulo("ENTRADA DE ESTOQUE")
             user = usuario_logado["nome"]
-            obs = input("Observação: ")
-
-            entrada_estoque(id_produto, qtd, user, obs)
+            entrada_estoque(user)
 
         # 4 - SAÍDA ESTOQUE
         elif opcao == "4":
-            print("\nSAÍDA DE ESTOQUE")
-            print("-" * 35)
-
-            id_produto = input("ID do produto: ")
-            qtd = int(input("Quantidade de saída: "))
+            mostrar_titulo("SAÍDA DE ESTOQUE")
             user = usuario_logado["nome"]
-            obs = input("Observação: ")
-
-            saida_estoque(id_produto, qtd, user, obs)
+            saida_estoque(user)
 
 
         #5- ALTERAR SENHA USUÁRIO
         elif opcao == "5":
-            print("\nALTERAR SENHA USUÁRIO")
-            print("-" * 35)
+            mostrar_titulo("ALTERAR SENHA USUÁRIO")
             alterar_senha(usuario_logado)
-
-        
 
         #MENU RESTRITO PARA ADMINISTRADOR
         # 6 - CADASTRAR PRODUTO
         elif opcao == "6":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
-            print("\nCADASTRAR PRODUTO")
-            print("-" * 35)
-
-            nome = input("Nome: ")
-            qtd = int(input("Quantidade: "))
-            descricao = input("Descrição: ")
-            categoria = input("Categoria: ")
-            qtd_minima = int(input("Quantidade mínima: "))
-            local = input("Local: ")
-
-            cadastrar_produto(nome, qtd, descricao, categoria, qtd_minima, local,usuario_logado)
+            mostrar_titulo("CADASTRAR PRODUTO")
+            cadastrar_produto(usuario_logado)
 
         # 7 - ATUALIZAR PRODUTO
         elif opcao == "7":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
-            print("\nATUALIZAR PRODUTO")
-            print("-" * 35)
-
-            id_produto = int(input("ID do produto: "))
-            nome = input("Nome: ")
-            descricao = input("Descrição: ")
-            categoria = input("Categoria: ")
-            qtd_minima = int(input("Quantidade mínima: "))
-            status = input("Status: ").upper()
-            local = input("Local: ")
-
-            atualizar_produto(id_produto,nome,descricao,categoria,qtd_minima,status,local)
+            mostrar_titulo("ATUALIZAR PRODUTO")
+            atualizar_produto(usuario_logado)
 
         # 8 - DELETAR PRODUTO
         elif opcao == "8":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
-            print("\nDELETAR PRODUTO")
-            print("-" * 35)
-
-            id_produto = int(input("ID do produto: "))
-            deletar_produto(id_produto)
+            mostrar_titulo("DELETAR PRODUTO")
+            deletar_produto(usuario_logado)
 
         
         # 9 - CADASTRAR USUÁRIO
         elif opcao == "9":
             if not verificar_permissao(usuario_logado,["ADMIN"]):
                 continue
-            print("\nCADASTRAR USUÁRIO")
-            print("-" * 35)
+            mostrar_titulo("CADASTRAR USUÁRIO")
             cadastrar_usuario(usuario_logado)
 
         # 10 - LISTAR USUÁRIOS
@@ -182,12 +145,6 @@ def main():
 
         else:
             print("Opção inválida!")
-
-def verificar_permissao(usuario,cargos_permitido ):
-    if usuario["cargo"] not in cargos_permitido:
-        print("Acesso negado! Voce não tem permissao para usar essa função")
-        return False
-    return True
-
+            
 if __name__ == "__main__":
     main()
