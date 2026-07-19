@@ -63,14 +63,12 @@ def main():
         # 3 - ENTRADA ESTOQUE
         elif opcao == "3":
             mostrar_titulo("ENTRADA DE ESTOQUE")
-            user = usuario_logado["nome"]
-            entrada_estoque(user)
+            entrada_estoque(usuario_logado["id_usuario"])
 
         # 4 - SAÍDA ESTOQUE
         elif opcao == "4":
             mostrar_titulo("SAÍDA DE ESTOQUE")
-            user = usuario_logado["nome"]
-            saida_estoque(user)
+            saida_estoque(usuario_logado["id_usuario"])
 
 
         #5- ALTERAR SENHA USUÁRIO

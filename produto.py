@@ -8,11 +8,19 @@ def cadastrar_produto(usuario_logado):
         cursor = conexao.cursor()
            
         try:
-            nome = input("Nome: ")
-            qtd = int(input("Quantidade: "))
+            nome = input("Nome: ").strip()
+            qtd = input("Quantidade: ")
+            if not qtd.isdigit():
+                print("Quantidade Inválida.")
+                return
+            qtd = int(qtd)
             descricao = input("Descrição: ")
             categoria = input("Categoria: ")
-            qtd_minima = int(input("Quantidade mínima: "))
+            qtd_minima = input("Quantidade mínima: ")
+            if not qtd_minima.isdigit():
+                print("Quantidade mínima Inválida.")
+                return
+            qtd_minima = int(qtd_minima)
             local = input("Local: ")
             
             cursor.execute(""" 
@@ -59,19 +67,47 @@ def atualizar_produto(usuario_logado):
     with conectar() as conexao:
         cursor = conexao.cursor()
         try:
-            id_produto = int(input("ID do produto: "))
-            nome = input("Nome: ")
-            descricao = input("Descrição: ")
-            categoria = input("Categoria: ")
-            qtd_minima = int(input("Quantidade mínima: "))
-            status = input("Status: ").upper()
-            local = input("Local: ")
-
+            id_produto = input("ID do produto: ")
+            if not id_produto.isdigit():
+                print("ID inválido.")
+                return
+            id_produto = int(id_produto)
+            
             cursor.execute("SELECT * FROM produto WHERE id_produto = ?",(id_produto,))
             
             produto = cursor.fetchone()
-
+            
             if produto is None :
+                            print("Nenhum produto encontrado.")
+                            return
+            
+            nome = input(f"Nome ({produto[1]}): ").strip()
+            descricao = input(f"Descrição ({produto[3]}): ").strip()
+            categoria = input(f"Categoria ({produto[4]}): ").strip()
+            qtd_minima = input(f"Quantidade mínima ({produto[5]}): ")
+            status = input(f"Status ({produto[7]}): ").upper()
+            local = input(f"Local ({produto[8]}): ").strip()
+
+            if nome == "":
+                nome = produto[1]
+            if descricao == "":
+                descricao = produto[3]
+            if categoria == "":
+                categoria = produto[4]
+            if qtd_minima == "":
+                qtd_minima = produto[5]
+            elif not qtd_minima.isdigit():
+                print("Quantidade mínima Inválida.")
+                return
+            else:
+                qtd_minima = int(qtd_minima)
+            if status == "":
+                status = produto[7]
+            if local == "":
+                local = produto[8]
+
+            if status not in("ATIVO","INATIVO"):
+                print("Status inválido.")
                 return
             
             sql = ("""UPDATE produto
@@ -91,7 +127,13 @@ def deletar_produto(usuario_logado):
         cursor = conexao.cursor()
 
         try:
-            id_produto = int(input("ID do produto: "))
+            id_produto = input("ID do produto: ")
+
+            if not id_produto.isdigit():
+                print("ID inválido.")
+                return
+            
+            id_produto = int(id_produto)
             cursor.execute("SELECT * FROM produto WHERE id_produto = ?", (id_produto,))
 
             produto =  cursor.fetchone()
@@ -116,9 +158,9 @@ def buscar_por_nome():
         cursor = conexao.cursor()
 
         try:
-            nome = input("Nome do produto: ")
+            nome = input("Nome do produto: ").strip()
 
-            sql = "SELECT * FROM produto WHERE nome LIKE ?"
+            sql = "SELECT id_produto,nome,qtd,descricao,categoria,local,status FROM produto WHERE nome LIKE ?"
                 
             cursor.execute(sql,(f"%{nome}%",))
 
@@ -134,8 +176,8 @@ def buscar_por_nome():
                         Quantidade: {produto[2]}
                         Descrição: {produto[3]}
                         Categoria: {produto[4]}
-                        Local: {produto[8]}
-                        Status: {produto[7]}
+                        Local: {produto[5]}
+                        Status: {produto[6]}
                         -------------------------
                         """)
             else:
@@ -174,12 +216,20 @@ def entrada_estoque(user):
         cursor = conexao.cursor()
         try:
             id_produto = input("ID do produto: ")
-            qtd = int(input("Quantidade de entrada: "))
+            if not id_produto.isdigit():
+                print("ID Inválido.")
+                return
+            id_produto = int(id_produto)
+            qtd = input("Quantidade de entrada: ")
+            if not qtd.isdigit():
+                print("Quantidade Inválida.")
+                return
+            qtd = int(qtd)
             id_usuario = user
             obs = input("Observação: ")
             
             if qtd <= 0:
-                print("Quantidade Invalida! Deve ser Superior a zero")
+                print("Quantidade Inválida! Deve ser Superior a zero")
                 return
             
             cursor.execute("SELECT * FROM produto WHERE id_produto = ?",(id_produto,))
@@ -211,11 +261,19 @@ def saida_estoque(user):
 
         try:
             id_produto = input("ID do produto: ")
-            qtd = int(input("Quantidade de saída: "))
+            if not id_produto.isdigit():
+                print("ID Inválido.")
+                return
+            id_produto = int(id_produto)
+            qtd = input("Quantidade de saída: ")
+            if not qtd.isdigit():
+                print("Quantidade Inválida.")
+                return
+            qtd = int(qtd)  
             obs = input("Observação: ")
             
             if qtd <= 0:
-                print("\n\nQuantidade invalida! Deve ser maio que Zero!")
+                print("\n\nQuantidade Inválida! Deve ser maior que Zero!")
                 return
 
             cursor.execute("SELECT * FROM produto WHERE id_produto = ?", (id_produto,))
@@ -224,7 +282,7 @@ def saida_estoque(user):
             produto =  cursor.fetchone()
 
             if produto is None:
-                print("Prouduto não encontrado!")
+                print("Produto não encontrado!")
                 return
 
             cursor.execute("UPDATE produto SET qtd = qtd - ? WHERE id_produto = ? AND qtd >= ?", (qtd, id_produto, qtd))
