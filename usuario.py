@@ -2,24 +2,21 @@ from conexao import conectar
 from datetime import datetime
 import bcrypt
 from logs import registrar_log
+from validacoes import ler_campo_obrigatorio, verificar_permissao,ler_id,ler_cargo,ler_status
 
 def cadastrar_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
-    nome = input("Digite o nome do usuário: ")
-    email = input("Digite o email do usuário: ")
-    senha = input("Digite a senha do usuário: ").strip()
-    setor = input("Digite o setor do usuário: ")
-    cargo = input("Digite o cargo do usuário: (ADMIN ou USUARIO)").upper()
+    nome = ler_campo_obrigatorio("Nome:")
+    email = ler_campo_obrigatorio("Email:")
+    senha = ler_campo_obrigatorio("Senha:")
+    setor = ler_campo_obrigatorio("Setor:")
+    cargo = ler_cargo("Cargo: (ADMIN ou USUARIO)")
     status = "ATIVO"
     data_criacao = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     senha_hash = bcrypt.hashpw(senha.encode("utf-8"),bcrypt.gensalt()).decode("utf-8")
     try:
-        if cargo not in ["ADMIN", "USUARIO"]:
-            print("Cargo invalido! somente ADMIN ou USUARIO")
-            return
-        
         cursor.execute("""INSERT INTO usuario (nome, email, senha, setor, cargo, status, data_criacao)
     VALUES (?, ?, ?, ?, ?, ?, ?)""", (nome, email, senha_hash, setor, cargo, status, data_criacao))
         conexao.commit()
@@ -28,7 +25,7 @@ def cadastrar_usuario(usuario_logado):
         registrar_log(usuario_logado["id_usuario"],"CADASTRAR_USUARIO",f"Cadastrou o usuario {nome}")
 
     except Exception as erro:
-        print(f"Erro ao cadastrar usuario:{erro}")
+        print(f"Erro ao cadastrar usuario: {erro}")
     
     finally:
         conexao.close()
@@ -36,8 +33,8 @@ def cadastrar_usuario(usuario_logado):
 def login ():
     conexao = conectar()
     cursor = conexao.cursor()
-    email = input("Digite seu Email:")
-    senha =  input("Digite sua senha:")
+    email = ler_campo_obrigatorio("Email:")
+    senha =  ler_campo_obrigatorio("Senha:")
     try:
         cursor.execute("SELECT id_usuario,nome, email,cargo,status,senha FROM usuario WHERE email=?",(email,))
         
@@ -89,7 +86,7 @@ def listar_usuario():
     if not usuarios:
         print("Nenhum usuario encontrado!")
     else:
-        print("\nLISTA DE USUARIOS")
+        print("\nLISTA DE USUÁRIOS")
         print("-" * 30)
         for usuario in usuarios:
             print(f"\nID: {usuario[0]}")
@@ -107,7 +104,7 @@ def buscar_usuario():
     conexao = conectar()
     cursor = conexao.cursor()
 
-    email = input("Email do usuario:").strip()
+    email = ler_campo_obrigatorio("Email do usuario a ser buscado:")
 
     try:
         sql = "SELECT id_usuario, nome,email, setor,cargo,status,data_criacao FROM usuario WHERE email LIKE ?"
@@ -117,7 +114,7 @@ def buscar_usuario():
         if not usuarios:
             print("Nenhum usuario encontrado!")
         else:
-            print("\n-----USUARIOS ENCONTRADOS-----")
+            print("\n-----USUÁRIOS ENCONTRADOS-----")
             for usuario in usuarios:
                 print(f"\nID Usuario: {usuario[0]}")
                 print(f"Nome: {usuario[1]}")
@@ -129,7 +126,7 @@ def buscar_usuario():
                 print("-" * 30)
 
     except Exception as erro:
-        print(f"Erro: {erro}")
+        print(f"Erro ao buscar usuario: {erro}")
     
     finally:
         conexao.close()
@@ -137,12 +134,7 @@ def buscar_usuario():
 def atualizar_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
-    id_user = input("ID usuário:").strip()
-    if not id_user.isdigit(): #Se não for numero
-        print("ID invalido! Digite um numero.")
-        conexao.close()
-        return
-    id_user = int(id_user)
+    id_user = ler_id("ID usuário:")
     
     try:
         sql_consulta = "SELECT nome, email, cargo, setor FROM usuario WHERE id_usuario = ?"
@@ -152,7 +144,7 @@ def atualizar_usuario(usuario_logado):
         consulta=cursor.fetchone()
 
         if consulta:
-            print("-----USUARIO ENCONTRADO-----")
+            print("-----USUÁRIO ENCONTRADO-----")
             print(f"ID usuario: {id_user}")
             print(f"Nome: {consulta[0]}")
             print(f"Email: {consulta[1]}")
@@ -160,7 +152,7 @@ def atualizar_usuario(usuario_logado):
             print(f"Setor: {consulta[3]}")
             
             print("Se desejar manter alguma informação, é só apertar ENTER.")
-            nome =input("NOME: ").upper()
+            nome =input("NOME: ")
             email =input("EMAIL: ")
             cargo =input("CARGO: ADMIN/USUARIO ").strip().upper()
             
@@ -197,7 +189,7 @@ def atualizar_usuario(usuario_logado):
             print("-----Usuario não encontrado!-----")
     
     except Exception as erro:
-        print(f"Erro:{erro}")
+        print(f"Erro ao atualizar usuario: {erro}")
 
     finally:
         conexao.close()
@@ -205,21 +197,15 @@ def atualizar_usuario(usuario_logado):
 def alterar_status_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
-    id_user = input("Id usuário:").strip()
+    id_user = ler_id("Id usuário:")
     
-    if not id_user.isdigit():
-        print("Digite apenas o NUMERO do ID do usuario.")
-        conexao.close()
-        return
-    
-    id_user = int(id_user)    
     
     try:
         cursor.execute("SELECT nome, email, setor, cargo, status, data_criacao FROM usuario WHERE id_usuario = ?",(id_user,))
         consulta = cursor.fetchone()
 
         if consulta:
-            print("-----USUARIO ENCONTRADO-----")
+            print("-----USUÁRIO ENCONTRADO-----")
             print(f"ID usuario: {id_user}")
             print(f"Nome: {consulta[0]}")
             print(f"Email: {consulta[1]}")
@@ -232,11 +218,8 @@ def alterar_status_usuario(usuario_logado):
                 print("Não é permitido alterar seu próprio status.")
                 return
             
-            novo_status=input("Novo status (ATIVO/INATIVO): ").strip().upper()
+            novo_status=ler_status("Novo status (ATIVO/INATIVO): ")
 
-            if novo_status not in ["ATIVO", "INATIVO"]:
-                print("Status inválido, Somente ATIVO ou INATIVO.")
-                return
             
             cursor.execute("UPDATE usuario SET status = ? WHERE id_usuario = ?",(novo_status,id_user,))  
             conexao.commit()
@@ -247,7 +230,7 @@ def alterar_status_usuario(usuario_logado):
             print("-----Usuario NÃO encontrado!-----")
 
     except Exception as erro:
-        print(f"Erro:{erro}")
+        print(f"Erro alterar status do usuario: {erro}")
     
     finally:
         conexao.close()
@@ -260,7 +243,7 @@ def alterar_senha(usuario_logado):
     
         senha_hash = cursor.fetchone()[0]
 
-        senha_antiga = input("Senha antiga:").strip()
+        senha_antiga = ler_campo_obrigatorio("Senha antiga:")
 
         senha_correta = bcrypt.checkpw(senha_antiga.encode("utf-8"), senha_hash.encode("utf-8"))
 
@@ -269,9 +252,9 @@ def alterar_senha(usuario_logado):
             return
         
         while True:
-            nova_senha = input("Digite a nova Senha: ").strip()
+            nova_senha = ler_campo_obrigatorio("Digite a nova Senha: ")
 
-            confirmar_senha =input("Digite novamente a NOVA senha: ").strip()
+            confirmar_senha = ler_campo_obrigatorio("Digite novamente a NOVA senha: ")
 
             if nova_senha == confirmar_senha:
                 break
@@ -290,16 +273,12 @@ def alterar_senha(usuario_logado):
 
 
     except Exception as erro:
-        print(f"Erro: {erro}")
+        print(f"Erro em alterar senha: {erro}")
 
     finally:
         conexao.close()
     
-def verificar_permissao(usuario,cargos_permitido ):
-    if usuario["cargo"] not in cargos_permitido:
-        print("Acesso negado! Voce não tem permissao para usar essa função")
-        return False
-    return True
+
 
 
 

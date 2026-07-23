@@ -9,19 +9,19 @@ def cadastrar_produto(usuario_logado):
            
         try:
             nome = input("Nome: ").strip()
-            qtd = input("Quantidade: ")
+            qtd = input("Quantidade: ").strip()
             if not qtd.isdigit():
                 print("Quantidade Inválida.")
                 return
             qtd = int(qtd)
-            descricao = input("Descrição: ")
-            categoria = input("Categoria: ")
-            qtd_minima = input("Quantidade mínima: ")
+            descricao = input("Descrição: ").strip()
+            categoria = input("Categoria: ").strip()
+            qtd_minima = input("Quantidade mínima: ").strip()
             if not qtd_minima.isdigit():
                 print("Quantidade mínima Inválida.")
                 return
             qtd_minima = int(qtd_minima)
-            local = input("Local: ")
+            local = input("Local: ").strip()
             
             cursor.execute(""" 
             INSERT INTO produto 
@@ -84,7 +84,7 @@ def atualizar_produto(usuario_logado):
             nome = input(f"Nome ({produto[1]}): ").strip()
             descricao = input(f"Descrição ({produto[3]}): ").strip()
             categoria = input(f"Categoria ({produto[4]}): ").strip()
-            qtd_minima = input(f"Quantidade mínima ({produto[5]}): ")
+            qtd_minima = input(f"Quantidade mínima ({produto[5]}): ").strip()
             status = input(f"Status ({produto[7]}): ").upper()
             local = input(f"Local ({produto[8]}): ").strip()
 
