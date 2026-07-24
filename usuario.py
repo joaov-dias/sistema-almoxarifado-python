@@ -2,7 +2,7 @@ from conexao import conectar
 from datetime import datetime
 import bcrypt
 from logs import registrar_log
-from validacoes import ler_campo_obrigatorio, verificar_permissao,ler_id,ler_cargo,ler_status
+from validacoes import ler_campo_obrigatorio, verificar_permissao,ler_inteiro,ler_cargo,ler_status
 
 def cadastrar_usuario(usuario_logado):
     conexao = conectar()
@@ -134,7 +134,7 @@ def buscar_usuario():
 def atualizar_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
-    id_user = ler_id("ID usuário:")
+    id_user = ler_inteiro("ID usuário:")
     
     try:
         sql_consulta = "SELECT nome, email, cargo, setor FROM usuario WHERE id_usuario = ?"
@@ -197,7 +197,7 @@ def atualizar_usuario(usuario_logado):
 def alterar_status_usuario(usuario_logado):
     conexao = conectar()
     cursor = conexao.cursor()
-    id_user = ler_id("Id usuário:")
+    id_user = ler_inteiro("Id usuário:")
     
     
     try:

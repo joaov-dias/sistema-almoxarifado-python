@@ -13,14 +13,16 @@ def verificar_permissao(usuario,cargos_permitido ):
         return False
     return True
 
-def ler_id(mensagem):
+def ler_inteiro(mensagem):
     while True:
         valor = input(mensagem).strip()
 
         if valor.isdigit():
-            return int(valor)
+            valor = int(valor)
+            if valor >= 1:
+                return valor
 
-        print(f"Campo '{mensagem}' deve ser um número inteiro válido.")
+        print(f"Digite um numero inteiro maior ou igual a 1")
 
 def ler_cargo(mensagem):
     while True:
