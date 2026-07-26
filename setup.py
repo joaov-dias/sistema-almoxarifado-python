@@ -2,6 +2,7 @@ import sqlite3
 from conexao import conectar
 from datetime import datetime
 import bcrypt
+from validacoes import ler_campo_obrigatorio
 
 
 def criar_banco():
@@ -9,7 +10,6 @@ def criar_banco():
 
     cursor = conexao.cursor()
 
-    #transformar o arquivo sql em variavel
     with open("schema.sql", "r") as arquivo_sql:
         sql = arquivo_sql.read()
 
@@ -27,13 +27,13 @@ def criar_primeiro_adm():
 
         data_criacao = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        nome = input("Digite o nome do ADMIN ").upper()
-        email = input("Digite o Email do ADMIN ").lower()
+        nome = ler_campo_obrigatorio("Digite o nome do ADMIN ").upper()
+        email = ler_campo_obrigatorio("Digite o Email do ADMIN ").lower()
         
         while True:
 
-            senha = input("Digite a senha do ADMIN ")
-            conf_senha = input("Confirme a senha do ADMIN ")
+            senha = ler_campo_obrigatorio("Digite a senha do ADMIN ")
+            conf_senha = ler_campo_obrigatorio("Confirme a senha do ADMIN ")
 
             if senha == conf_senha:
                 break

@@ -1,3 +1,10 @@
+"""
+Sistema de Controle de Almoxarifado
+
+Autor: João Vitor Dias Venchiarutti dos Santos
+GitHub: https://github.com/joaov-dias
+
+"""
 from produto import listar_produtos, atualizar_produto, deletar_produto, cadastrar_produto, buscar_por_nome,estoque_minimo,entrada_estoque,saida_estoque
 from  movimentacao import listar_movimentacoes  
 from usuario import cadastrar_usuario,login,listar_usuario,buscar_usuario,atualizar_usuario,alterar_status_usuario, alterar_senha,verificar_permissao
