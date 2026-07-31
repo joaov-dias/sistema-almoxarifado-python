@@ -33,6 +33,9 @@ def cadastrar_usuario(usuario_logado):
 def login ():
     conexao = conectar()
     cursor = conexao.cursor()
+    print("""=========================================
+   SISTEMA DE CONTROLE DE ALMOXARIFADO
+=========================================\n""")
     email = ler_campo_obrigatorio("Email:")
     senha =  ler_campo_obrigatorio("Senha:")
     try:
@@ -50,9 +53,6 @@ def login ():
 
             if senha_valida:
                 if usuario[4] == "ATIVO":
-                    print(f"\nBem vindo,{nome}!")
-                    print(f"Cargo:{cargo}")
-                    print(f"Login realizado com sucesso!")
                     registrar_log(id_usuario,"LOGIN","Login realizado com sucesso")
 
                     return{
